@@ -1,0 +1,15 @@
+html, body {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	display: block;
+	overflow: hidden;
+	background: #222;
+	color: white;
+}
+
+#main {
+	display: block;
+	width: 100vw;
+	height: 100vh;
+}
