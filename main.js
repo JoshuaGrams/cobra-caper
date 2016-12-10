@@ -22,11 +22,10 @@
 		game.draw = function(state) {
 			WebGL.clear(glCtx, [0.5, 0.5, 0.3, 1]);
 			if(!state.title) {
-				state.title = state.uiFont.drawText([100, 100], [1, 0],
-					"Some Text Here");
-			} else {
-				for(var i=0; i<state.title.length; ++i) state.title[i].draw();
+				state.titleMesh = new TexturedMesh().text(uiFont, "The Cobra Caper");
+				state.title = new MeshInstance(ui, state.titleMesh);
 			}
+			state.title.draw([100, 100]);
 			ui.draw(state.vp.pixelMatrix());
 		}
 
