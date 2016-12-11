@@ -34,7 +34,7 @@ Player.prototype.draw = function() {
 			dist = V2.length(offset);
 		}
 		V2.lerp(this.segments[i].transform.position, space/dist, cur, last);
-		this.segments[i].transform.setRotation(V2.angle(offset));
+		this.segments[i].transform.rotation = V2.angle(offset);
 		dist -= space; space = this.segments.spacing;
 		next = this.segments[i].transform.position;
 	}
@@ -57,7 +57,7 @@ Player.prototype.step = function(ds, walls) {
 		while(hist.length > hist.limit) hist.shift();
 	}
 	if(dist > 0.0001 * this.radius) {
-		this.transform.setRotation(V2.angle(offset));
+		this.transform.rotation = V2.angle(offset);
 	}
 }
 
