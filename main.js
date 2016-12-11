@@ -55,6 +55,7 @@
 					sprite: new MeshInstance(camera, hWall, [0, -ah/2], Math.PI) }
 			]
 		};
+		initialState.vp.setLimits(-aw/2-margin, -ah/2-margin, aw/2+margin, ah/2+margin);
 
 		var game = new GameMode(initialState, glCtx.canvas, 1/100);
 
@@ -67,20 +68,12 @@
 			if(!state.player) state.player = new MeshInstance(ui, state.headMesh);
 			state.title.draw([100, 100]);
 			for(var i=0; i<state.walls.length; ++i) {
-				if(state.walls[i].sprite) {
-					console.log(state.walls[i].sprite);
-					state.walls[i].sprite.draw();
-				}
+				if(state.walls[i].sprite) state.walls[i].sprite.draw();
 			}
 			state.player.draw();
 
 			var c = state.vp.center;
 			V2.copy(c, state.player.transform.position);
-			// margins
-			var hm = state.vp.kx / 2 - margin;
-			var vm = state.vp.ky / 2 - margin;
-			c[0] = Math.max(-aw/2+hm, Math.min(aw/2-hm, c[0]));
-			c[1] = Math.max(-ah/2+vm, Math.min(ah/2-vm, c[1]));
 			camera.draw(state.vp.matrix());
 			ui.draw(state.vp.pixelMatrix());
 		}
