@@ -6,6 +6,7 @@ function Player(layer, headMesh, bodyMesh, radius, maxSpeed, linearDamping) {
 	this.history.limit = 100;
 	this.segments = [];
 	this.segments.spacing = 3.8*radius;
+	this.segments.headSpacing = 4.4*radius;
 	for(var i=0; i<10; ++i) {
 		this.segments[i] = new MeshInstance(layer, bodyMesh);
 		this.segments[i].visible = true;
@@ -18,7 +19,7 @@ Player.tmp = [];
 Player.prototype.draw = function() {
 
 	// Place and draw body segments
-	var space = this.segments.spacing;
+	var space = this.segments.headSpacing;
 	var hist = this.history, h = hist.length;
 	var next = this.transform.position;
 	var cur, last = this.transform.position;
