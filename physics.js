@@ -107,7 +107,7 @@ Physics.prototype.getCollisions = function(dt) {
 Physics.compareCollisionTime = function(a, b) { return a.t - b.t }
 
 Physics.prototype.rigidBodiesCollide = function(p, q) {
-	var dp = V.sub(Physics.tmp1, q.transform.position, p.transform.position);
+	var dp = V.sub(Physics.tmp1, q.position, p.position);
 	var dv = V.sub(Physics.tmp2, q.motion.position, p.motion.position);
 	var r = r0 + r1;
 
@@ -128,7 +128,7 @@ Physics.prototype.rigidBodiesCollide = function(p, q) {
 
 
 Physics.prototype.rigidAndStaticBodiesCollide = function(a, b, dt) {
-	var p = a.transform.position;
+	var p = a.position;
 	if(pointToSegmentDistance(p, b.start, b.end) < a.radius) {
 		return 0.99 * dt;  // attempt to do these last
 	} else return false;
@@ -138,7 +138,7 @@ Physics.prototype.rigidAndStaticBodiesCollide = function(a, b, dt) {
 Physics.prototype.bounceRigidBodies = function(a, b) {
 	var e = Math.max(a.elasticity, b.elasticity);      // XXX - or average?
 	var m = a.m + b.m;
-	var n = V.sub(Physics.tmp, b.transform.position, a.transform.position);
+	var n = V.sub(Physics.tmp, b.position, a.position);
 	var dist = V.length(n);
 	V.scale(n, 1/dist);
 	var ua = V.dot(n, a.motion.position);  // normal speeds
@@ -151,8 +151,8 @@ Physics.prototype.bounceRigidBodies = function(a, b) {
 	if (overlap > 0) {
 		// 1% extra, as 1 minus proportion of total mass, i.e use *other* mass.
 		overlap *= 1.01 / m;
-		V.dec(a.transform.position, V.x(o, n, overlap * b.m));
-		V.inc(b.transform.position, V.x(o, n, overlap * a.m));
+		V.dec(a.position, V.x(o, n, overlap * b.m));
+		V.inc(b.position, V.x(o, n, overlap * a.m));
 	}
 
 	if(du < 0) {  // are they moving toward each other?
@@ -167,7 +167,7 @@ Physics.prototype.bounceRigidBodies = function(a, b) {
 
 // circle/line
 Physics.prototype.bounceRigidFromStaticBody = function(a, b) {
-	var v = a.motion.position, c = a.transform.position, r = a.radius;
+	var v = a.motion.position, c = a.position, r = a.radius;
 	var p = b.start, q = b.end;
 
 	var n = V2.normalize(V2.perp2d(V2.sub(Physics.tmp, q, p)));
@@ -197,7 +197,6 @@ function RigidBody(layer, mesh, radius, maxSpeed, linearDamping) {
 RigidBody.prototype = Object.create(MeshInstance.prototype);
 
 RigidBody.prototype.step = function(ds) {
-	var t = this.transform;
 	var v = this.motion;
 
 	// Add acceleration and cap velocity.
@@ -212,7 +211,7 @@ RigidBody.prototype.step = function(ds) {
 	if(speed < 0.001) { v.position[0] = 0;  v.position[1] = 0; }
 	else V2.x(v.position, v.position, 1 - this.linearDamping);
 
-	t.move(V2.x([], v.position, ds));
+	this.move(V2.x([], v.position, ds));
 }
 
 

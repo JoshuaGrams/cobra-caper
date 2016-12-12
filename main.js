@@ -71,7 +71,7 @@
 			physics.draw();
 
 			var c = state.vp.center;
-			V2.copy(c, state.player.transform.position);
+			V2.copy(c, state.player.position);
 			camera.draw(state.vp.matrix());
 			ui.draw(state.vp.pixelMatrix());
 		}
