@@ -45,8 +45,8 @@ Player.prototype.draw = function() {
 	RigidBody.prototype.draw.call(this);
 }
 
-Player.prototype.step = function(ds, walls) {
-	RigidBody.prototype.step.call(this, ds, walls);
+Player.prototype.step = function(ds) {
+	RigidBody.prototype.step.call(this, ds);
 	var hist = this.history;
 	var lastPos = hist[hist.length-1];
 	var curPos = this.transform.position;

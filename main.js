@@ -37,25 +37,26 @@
 			[-ah/2-ww, ww], [ah/2+ww, ww], [-ah/2, 0], [ah/2, 0],
 			textureCoords.wallGradient);
 
+		var physics = new Physics();
+
 		// ------------------------------------------------------------
 
 		var initialState = {
 			vp: new Viewport(glCtx, [0, 0], viewArea, 0.95),
 			ui: ui, uiFont: uiFont,
 			title: new MeshInstance(ui, title),
-			player: new Player(camera, head, body, 0.09, 7.5, 0.008),
-			walls: [
-				{ start: [aw/2, -ah/2], end: [aw/2, ah/2],
-					sprite: new MeshInstance(camera, vWall, [aw/2, 0], -Math.PI/2) },
-				{ start: [-aw/2, -ah/2], end: [-aw/2, ah/2],
-					sprite: new MeshInstance(camera, vWall, [-aw/2, 0], Math.PI/2) },
-				{ start: [-aw/2, ah/2], end: [aw/2, ah/2],
-					sprite: new MeshInstance(camera, hWall, [0, ah/2]) },
-				{ start: [-aw/2, -ah/2], end: [aw/2, -ah/2],
-					sprite: new MeshInstance(camera, hWall, [0, -ah/2], Math.PI) }
-			]
+			player: new Player(camera, head, body, 0.09, 7.5, 0.008, physics),
 		};
 		initialState.vp.setLimits(-aw/2-margin, -ah/2-margin, aw/2+margin, ah/2+margin);
+		physics.addBody(new StaticBody([aw/2, -ah/2], [aw/2, ah/2],
+			new MeshInstance(camera, vWall, [aw/2, 0], -Math.PI/2)));
+		physics.addBody(new StaticBody([-aw/2, ah/2], [-aw/2, -ah/2],
+			new MeshInstance(camera, vWall, [-aw/2, 0], Math.PI/2)));
+		physics.addBody(new StaticBody([aw/2, ah/2], [-aw/2, ah/2],
+			new MeshInstance(camera, hWall, [0, ah/2])));
+		physics.addBody(new StaticBody([-aw/2, -ah/2], [aw/2, -ah/2],
+			new MeshInstance(camera, hWall, [0, -ah/2], Math.PI)));
+		physics.addBody(initialState.player);
 
 		var game = new GameMode(initialState, glCtx.canvas, 1/100);
 
@@ -67,10 +68,7 @@
 			}
 			if(!state.player) state.player = new MeshInstance(ui, state.headMesh);
 			state.title.draw([100, 100]);
-			for(var i=0; i<state.walls.length; ++i) {
-				if(state.walls[i].sprite) state.walls[i].sprite.draw();
-			}
-			state.player.draw();
+			physics.draw();
 
 			var c = state.vp.center;
 			V2.copy(c, state.player.transform.position);
@@ -82,7 +80,7 @@
 		game.fixedStep = function(state, ds) {
 			var player = state.player;
 			V2.x(player.a, this.arrows(), player.accel);
-			player.step(ds, state.walls);
+			physics.step(ds);
 			return state;
 		}
 
