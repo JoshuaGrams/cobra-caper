@@ -67,7 +67,7 @@
 				state.title = new MeshInstance(ui, state.titleMesh);
 			}
 			if(!state.player) state.player = new MeshInstance(ui, state.headMesh);
-			state.title.draw([100, 100]);
+			// state.title.draw([100, 100]);
 			physics.draw();
 
 			var c = state.vp.center;
